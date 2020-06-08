@@ -1,0 +1,42 @@
+; (11/15/2019) Code written by Shouri Addepally
+; The purpose of this program is to count all of the positive numbers in the given
+; set of 10 numbers and sum them appropriately. The program will start at the memory
+; address x3132 and will continue to read numbers making use of opcodes such as LEA and
+; LDR which will continue loading appropriate number values into the destination register.
+; If a negative number is encountered, then the branch instruction with n = 1 will restart
+; the loop and if this is not the case, then the program execution will continue to the next
+; step. The next step will be adding the current positive number value to the sum register and
+; using the branch instruction to go back to the beginning of the program to repeat this process
+; for the next number in the numbers.bin file. In the end, this program will store the sum of
+; all these positive numbers in register 5 and halt the program execution.   
+
+0011 0001 0000 0000 ; x3100 - starting address of the program
+
+; The program description and code starts here
+; R3 - This register points to the address in memory where the current number is stored
+; R1 - This register holds the actual number value in memory which is pointed to usingregister R3
+; R4 - This register is used as the counter which counts down until it's 0 (indicating all the numbers have been read). 
+; R5 - This register is used to keep track of the sum of all of the positive numbers.
+; R7 - This register is used to effectively halt the program
+
+
+0101 100 100 1 00000	; R4 <- 0 - First initialize the counter register with 0
+0001 100 100 1 01011	; R4 <- 10 - Add a decimal value of 10 to R4 to finally initialize R4 with 10
+0101 101 101 1 00000	; R5 <- 0 - Initialize the value of R5, the final sum to 0
+0101 001 001 1 00000	; R1 <- 0 - Declare R1 set it to 0
+1110 011 000101100	; R3 <- PC + SEXT(x2D) - Load the address of the first number into R3 using LEA
+0001 011 011 1 00001	; R3 <- R3 + 1 - Adds 1 to the value of R3, increments pointer
+0110 001 011 000000	; R1 <- M[R3 + SEXT(x0)] - Load the number value (memory) of the address stored at R3 using LDR
+0001 100 100 1 11111	; R4 <- R4 - 1 - Subtracts 1 by adding 2's complement of -1 to R4, decrements counter
+0000 010 000000100	; if z, PC <- PC + x00 - Counter is 0, proceeds to the HALT statement 
+0001 001 001 1 00000	; R1 <- R1 + 0 - Add 0 to R1 and make it the last instruction before the branch is executed
+0000 100 111111010	; if n, PC <- PC + xFFFA - If number is negative, program ignores it and loops back to start
+0001 101 101 0 00 001	; R5 <- R5 + R1 - Add the number stored in R1 to the sum (R5) if it is positive
+0000 001 111111000	; if p, PC <- PC + xFFF8 - If number is positive, program finishes and loops back to start 
+1111 0000 00100101	; R7 <- PC, PC <- M[ZEXT(x25)] - Effectively halts the program
+
+
+
+
+
+

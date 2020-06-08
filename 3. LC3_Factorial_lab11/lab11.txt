@@ -1,0 +1,35 @@
+Question 1: Describe the errors that occur when trying to assemble lab11.asm. Identify the cause of each error.
+
+The first error occurs in line 14, and it says that there are "illegal operands for missing opcode". This error occurs because the x3000 hexidecimal value has no meaning to the assembler and it needs an .ORIG directive which will allow the assembler to start execution at the hexidecimal address value of x3000.
+
+The next error occurs in line 16, and it says that "instruction appears before .ORIG". The cause of this error is similar to the prevoius error because the program execution won't happen correctly since the starting program address doesn't have the .ORIG directive which tells the assembler where to start writing bits to memory.
+
+The next error occurs on line 17, and it says that "constant outside of allowed range". The cause of this error was because the LD command is M[PC + SEXT(Offset)] and the initial code of the offset of x3010 pointed to a memory loaction that was out of range thus causing this error.
+
+The next occurs on line 19 "illegal operands for ADD". The cause of this error was because of two commas which results in an illegal operand addition for ADD.
+
+The next error occurs on line 30 and it said, "constant outside of allowed range." The cause of this error was that the clear command was not written properly. The initial command used LOAD to load a hex value of x300F into R5 when the actual command should have been to load a hex value of x0000 into R5 in order to effectively clear it.
+
+The next error occurs on line 32 and the error says "label OUTERLOOP has already appeared". This error occured because the letters in the branch instruction were initially pz and they should've been zp for the Branch instruction to execute correctly.
+
+The next error occurs on line 35, and the error says, "constant outside of allowed range". The error occured because the LD has several more bits than what were allowed based on the instruction in line 35 and having a label would be more efficient.   
+
+The next error occurs on line 43, and the error states that "no .END Directive is found". This error occurs because the assembler must stop reading the line after the program lines are executed and without this .END Directive, the file will continue to read the file even though all of the lines have already been executed which is what we don't want.
+
+
+Question 2: For each label in the code, write down the corresponding memory location. 
+
+// Symbol table
+// Scope level 0:
+//	Symbol Name       Page Address
+//	----------------  ------------
+//	OUTERLOOP         300A
+//	INNERLOOP         300B
+//	INPUT             3014
+//	CLEAR             3015
+//	OFFSET            3016
+//	RESULT            3017
+
+Question 3: Between using labels and explicit memory locations/offsets, which one makes the most sense, and why?
+
+Between labels and explicit memory locations/offsets using labels makes the most sense. This is because explicit memory locations/offsets are both step dependent, which means that if a variable number of lines of code are written before the offset is declared then there is a chance that an offset could execute the wrong instruction if it is not declared properly. Meanwhile a label eliminates this error since it can simply be refrenced with its name no matter how many lines of code are written before the label is used.
